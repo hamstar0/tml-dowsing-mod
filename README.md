@@ -1,5 +1,5 @@
-# tml-durability-mod
+# tml-dowsing-mod
 
-Sources for a tModLoader (Terraria mod loader) mod called Durability. This mod adds tool and armor usage wear and tear, along with some relevant associated gameplay mechanics.
+Adds craftable dowsing rods for finding treasure, along with relevant gameplay mechanics.
 
-https://forums.terraria.org/index.php?threads/durability.52036/
+https://forums.terraria.org/index.php?threads/dowsing-rod-locates-materials-objects-rare-mobs-and-mobs-with-rare-items.59586/

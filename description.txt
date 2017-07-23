@@ -1,4 +1,4 @@
-[WIP] Adds craftable Dowsing Rods. Used for finding treasure.
+[WIP] Adds craftable dowsing rods for finding treasure. Just be sure to move quickly!
 - Dowsing Rod - Finds a given block type (e.g. dirt, ore)
 - Vining Rod - Finds a given object type (e.g. chests)
 - TODO: Witching Rod - Finds rare mobs
