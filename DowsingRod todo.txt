@@ -1,0 +1,79 @@
+v1
+-	Implement Divining Rod
+-	Implement Witching Rod
+-	Implement backlash fx
+-	Release WIP
+
+-	Implement Vining Rod
+	-	Relegate vining rod to object finding only
+	-	Create detector (tileFlame, tileRope, tileFrameImportant, tileContainer, tileSign, (tileNoFail), Main.tileAlch)
+-	Shrink rod sprites
+-	Reduce mana by half (give +1 mana every other Shoot)
+-	Add psychokinetic discharge
+	-	Add fx for each degauss
+	-	Implement tile degaussing
+-	Improve player psychokinetic charge fx
+	-	On hit, set projectiles to swarm to the player's position
+	-	@Options
+		-	157GL flakey sparks shower always-lit
+		-	259G orbs shower
+		-	261GL puffy flakes shower
+		-	263GL flakes shower
+		-	264GL tracer flakes shower
+-	Implement Dowsing Rod
+	-	Implement dowsing detect FX (based on range)
+		-	Implement FX zooming based on range
+		-	Implement rod tip fx
+		-	@Options
+			-	6	0.5
+			-	20-21	0.5
+			-	!61	1
+			-	74	0.5
+			-	89	0.7	NOG
+			-	!107	0.7	NOG	FI 0.5
+			-	!110	0.7	NOG
+	-	Implement dowsing rod block overlay on icon
+	-	Implement dowsed blocks fx
+	-	Implement dowsing charge fx
+	-	Implement psychokinetic charge
+		-	Set time stacking
+		-	Add debuff
+	-	Implement dowse tile registering
+	-	Implement charging (a right-click action)
+	-	Implement line scan
+-	Create rod sprites
+-	Define rod items
+-	Add config
+-	Setup project
+-	Create plan
+
+
+
+
+Plan v1
+-	Dowsing works by 100 random distance ray casts per frame in a cone up to 1000 blocks
+-	When a hit is detected, the rod jumps slightly
+-	Rods use up mana quickly
+-	A rod must be 'charged' by touching an instance of the object (or mob) in question to divine its position
+-	Charges are permanent
+-	Dowsing Rod
+	-	Recipe: Ebonwood/Crimwood, Lens, Feather, Active Stone Block
+	-	Detects any basic block/ore type
+-	Vining Rod
+	-	Recipe: Dowsing Rod, Vines, Amber
+	-	Detects non-basic block types (objects); e.g. Strange Plants, Life Crystals, Chests, and Statues (any)
+-	Witching Rod
+	-	Recipe: Dowsing Rod, Guide Voodoo Doll, Purification Powder
+	-	"Detects" rare mobs nearby (see Divining Rod)
+-	Divining Rod
+	-	Recipe: Vining Rod, Witching Rod, Throne
+	-	"Detects" mobs with rare items
+	-	An invisible point is placed randomly offscreen where the rare item mob is "supposed" to be
+	-	If an instance of the mob in question happens to be at that point, it is "chosen" to drop a rare item
+	-	When the point enters the screen, it is re-randomized to another place offscreen
+	-	Each re-randomization increases the radius of the mob selector
+-	Plan for psychokinetic charge
+	-	40 "dowsing beam" tracer rays are used in a cone up to 250 units long, and 100 units wide at the end
+	-	The nearest object hit by a beam is selected to receive a 'charge'
+	-	Each charge adds a 15 second debuff that does 20 damage at the end of the debuff timer
+	-	Each successive charge adds +7 seconds and +20 damage to the debuff, up to 30 times

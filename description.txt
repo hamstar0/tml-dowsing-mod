@@ -1,0 +1,6 @@
+[WIP] Adds craftable Dowsing Rods. Used for finding treasure.
+- Dowsing Rod - Finds a given block type (e.g. dirt, ore)
+- Vining Rod - Finds a given object type (e.g. chests)
+- TODO: Witching Rod - Finds rare mobs
+- TODO: Divining Rod - Finds rare drops (e.g. Rod of Discord)
+- Config file: Documents/My Games/Terraria/ModLoader/Mod Configs/Dowsing Config.json

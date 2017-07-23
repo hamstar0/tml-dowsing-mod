@@ -1,0 +1,7 @@
+author = hamstar
+version = 1.0.0
+displayName = Dowsing
+modReferences = HamstarHelpers
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*
+includePDB = true
+homepage = https://forums.terraria.org/index.php?threads/dowsing-rod-locates-materials-objects-rare-mobs-and-mobs-with-rare-items.59586/
