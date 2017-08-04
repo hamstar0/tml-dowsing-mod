@@ -54,12 +54,18 @@
   <ItemGroup>
     <Compile Include="Buffs\PsychokineticChargeDebuff.cs" />
     <Compile Include="ConfigDefaults.cs" />
+    <Compile Include="Data\DiviningTargetData.cs" />
+    <Compile Include="Data\TileData.cs" />
+    <Compile Include="Data\WitchingTargetData.cs" />
+    <Compile Include="DowsingNetProtocol.cs" />
     <Compile Include="DowsingPlayer.cs" />
-    <Compile Include="DowsingWorld.cs" />
     <Compile Include="DowsingMod.cs" />
-    <Compile Include="Items\RodItem.cs" />
+    <Compile Include="Data\TargetData.cs" />
+    <Compile Include="Items\BaseRods\TargetRodItem.cs" />
+    <Compile Include="Items\BaseRods\RodItem.cs" />
     <Compile Include="Items\DiviningRodItem.cs" />
-    <Compile Include="Items\RodItemInfo.cs" />
+    <Compile Include="Items\Info\RodItemInfo.cs" />
+    <Compile Include="Items\BaseRods\TileRodItem.cs" />
     <Compile Include="Items\WitchingRodItem.cs" />
     <Compile Include="Items\ViningRodItem.cs" />
     <Compile Include="Items\DowsingRodItem.cs" />

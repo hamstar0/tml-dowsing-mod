@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System.IO;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -7,10 +8,14 @@ namespace Dowsing.Items {
 	class RodItemInfo : GlobalItem {
 		public override bool InstancePerEntity { get { return true; } }
 
+		public string Id;
+
+
 		public override GlobalItem Clone( Item item, Item item_clone ) {
 			var clone = (RodItemInfo)base.Clone( item, item_clone );
-			clone.DowsingBlockType = this.DowsingBlockType;
-			clone.CooldownTimer = this.CooldownTimer;
+			clone.Id = this.Id;
+			clone.CastCooldownTimer = this.CastCooldownTimer;
+			clone.TargetTileType = this.TargetTileType;
 			return clone;
 		}
 
@@ -22,18 +27,30 @@ namespace Dowsing.Items {
 		}
 
 		public override void Load( Item item, TagCompound tag ) {
-			this.DowsingBlockType = tag.GetInt( "block_type" );
+			this.Id = tag.GetString( "id" );
+			this.TargetTileType = tag.GetInt( "tile_type" );
 		}
 
 		public override TagCompound Save( Item item ) {
 			return new TagCompound {
-				{ "block_type", this.DowsingBlockType }
+				{ "id", this.Id },
+				{ "tile_type", this.TargetTileType }
 			};
+		}
+
+		public override void NetSend( Item item, BinaryWriter writer ) {
+			writer.Write( this.Id );
+		}
+
+		public override void NetReceive( Item item, BinaryReader reader ) {
+			this.Id = reader.ReadString();
 		}
 
 
 
-		public int DowsingBlockType = -1;
-		public int CooldownTimer = 0;
+		////////////////
+
+		public int CastCooldownTimer = 0;
+		public int TargetTileType = -1;
 	}
 }

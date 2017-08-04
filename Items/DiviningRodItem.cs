@@ -11,6 +11,7 @@ namespace Dowsing.Items {
 			this.DisplayName.SetDefault( "Divining Rod" );
 			//this.Tooltip.SetDefault( "Detects a mob with a rare item up to 250 blocks"
 			//	+ '\n' + "Right-click a mob to detect its type"
+			//	+'\n' + "Several approach attempts may be needed."
 			//	+ '\n' + "You're in for a shock if you don't find them fast!" );
 		}
 
@@ -38,10 +39,6 @@ namespace Dowsing.Items {
 		}
 
 		////////////////
-
-		public override Rectangle GetFrame() {
-			return new Rectangle();
-		}
 
 		protected override bool Dowse( Player player, Vector2 aiming_at ) {
 			throw new NotImplementedException();

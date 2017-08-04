@@ -1,5 +1,5 @@
 author = hamstar
-version = 1.0.0
+version = 1.1.0
 displayName = Dowsing
 modReferences = HamstarHelpers
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .git\*

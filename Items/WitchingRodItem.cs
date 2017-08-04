@@ -1,16 +1,18 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 
 namespace Dowsing.Items {
-	class WitchingRodItem : RodItem {
+	class WitchingRodItem : TargetRodItem {
 		public override void SetStaticDefaults() {
+			var mymod = (DowsingMod)this.mod;
+
 			this.DisplayName.SetDefault( "Witching Rod" );
-			//this.Tooltip.SetDefault( "Detects rare mobs up to 250 blocks in a line"
-			//	+ '\n' + "You're in for a shock if you don't find them fast!" );
+			this.Tooltip.SetDefault( "Detects rare mobs up to " + mymod.Config.Data.MaxWitchingRangeInTiles + " blocks in a line"
+				+ '\n' + "Several approach attempts may be needed."
+			+ '\n' + "You're in for a shock if you don't find it fast!" );
 		}
 
 		public override void SetDefaults() {
@@ -39,16 +41,22 @@ namespace Dowsing.Items {
 
 		////////////////
 
-		public override Rectangle GetFrame() {
-			return new Rectangle();
-		}
-
 		protected override bool Dowse( Player player, Vector2 aiming_at ) {
-			throw new NotImplementedException();
+			var mymod = (DowsingMod)this.mod;
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+			int range = mymod.Config.Data.MaxWitchingRangeInTiles;
+
+			if( !modplayer.WitchingData.HasNpcTarget() ) {
+				if( this.CastRareNpcDowse( player, aiming_at, range ) ) { return true; }
+				return this.CastVirtualTargetDowse( player, aiming_at, range );
+			} else {
+				return this.CastNpcTargetDowse( player, aiming_at, modplayer.WitchingData.TargetNpcWho, range );
+			}
 		}
 
-		public override void ChooseDowsingTypeAtMouse( Player player ) {
-			// TODO: Implement mob choosing method
+		public override void VirtualTargetIsDowsed( Player player ) {
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+			modplayer.WitchingData.IsVirtualTargetDowsed = true;
 		}
 	}
 
@@ -66,9 +74,8 @@ namespace Dowsing.Items {
 		public override bool RecipeAvailable() {
 			var mymod = (DowsingMod)this.mod;
 			if( !mymod.Config.Data.Enabled ) { return false; }
-
-			return false;
-			//return mymod.Config.Data.WitchingRodIsCraftable;
+			
+			return mymod.Config.Data.WitchingRodIsCraftable;
 		}
 	}
 }

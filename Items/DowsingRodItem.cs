@@ -1,13 +1,14 @@
 ﻿using HamstarHelpers.TileHelpers;
 using HamstarHelpers.UIHelpers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 
 namespace Dowsing.Items {
-	class DowsingRodItem : RodItem {
+	class DowsingRodItem : TileRodItem {
 		public override void SetStaticDefaults() {
 			var mymod = (DowsingMod)this.mod;
 
@@ -40,19 +41,33 @@ namespace Dowsing.Items {
 			recipe.AddRecipe();
 		}
 
+		////////////////
+
+		public override void PostDrawInInventory( SpriteBatch sb, Vector2 position, Rectangle frame, Color draw_color, Color item_color, Vector2 origin, float scale ) {
+			var item_info = this.item.GetGlobalItem<RodItemInfo>();
+			if( item_info.TargetTileType == -1 ) { return; }
+			if( item_info.TargetTileType >= Main.tileTexture.Length ) { return; }
+
+			var tile_tex = Main.tileTexture[item_info.TargetTileType];
+			position.Y -= 8f * scale;
+			position.X += (float)((frame.Width / 2) - 16) * scale;
+
+			var dest = new Rectangle( (int)position.X, (int)position.Y, (int)(32f * scale), (int)(32f * scale) );
+
+			sb.Draw( tile_tex, dest, new Rectangle( 16, 16, 16, 16 ), draw_color, 0f, Vector2.Zero, SpriteEffects.None, 0 );
+		}
+
 
 		////////////////
 
-		public override Rectangle GetFrame() {
-			return new Rectangle( 16, 16, 16, 16 );
-		}
-
 		protected override bool Dowse( Player player, Vector2 aiming_at ) {
+			var mymod = (DowsingMod)this.mod;
 			var myitem = this.item.GetGlobalItem<RodItemInfo>();
-			if( myitem.DowsingBlockType == -1 ) { return false; }
+			if( myitem.TargetTileType == -1 ) { return false; }
 
-			return this.CastBlockDowse( player, aiming_at, myitem.DowsingBlockType );
+			return this.CastBlockDowse( player, aiming_at, mymod.Config.Data.MaxDowsingRangeInTiles, myitem.TargetTileType );
 		}
+
 
 		public override void ChooseDowsingTypeAtMouse( Player player ) {
 			var item_info = this.item.GetGlobalItem<RodItemInfo>();
@@ -65,10 +80,9 @@ namespace Dowsing.Items {
 			
 			if( !TileHelpers.IsAir(tile) ) {
 				if( !TileIdentityHelpers.IsObject( tile.type ) ) {
-					var modworld = this.mod.GetModWorld<DowsingWorld>();
 					string text = Lang.GetMapObjectName( Main.Map[tile_x, tile_y].Type );
 
-					text = TileIdentityHelpers.GetTileName( item_info.DowsingBlockType );
+					text = TileIdentityHelpers.GetTileName( item_info.TargetTileType );
 
 					if( text == "" ) {
 						Main.NewText( "Dowsing Rod now attuned to some kind of material...", RodItem.AttunedColor );
@@ -76,9 +90,9 @@ namespace Dowsing.Items {
 						Main.NewText( "Dowsing Rod now attuned to any " + text, RodItem.AttunedColor );
 					}
 
-					item_info.DowsingBlockType = tile.type;
+					item_info.TargetTileType = tile.type;
 
-					modworld.RenderDowseEffect( new Vector2(tile_x * 16, tile_y * 16), 5, Color.GreenYellow );
+					RodItem.RenderDowseEffect( new Vector2(tile_x * 16, tile_y * 16), 5, Color.GreenYellow );
 				} else {
 					Main.NewText( "Dowsing Rod may only attune to basic materials.", Color.Yellow );
 				}
@@ -94,7 +108,7 @@ namespace Dowsing.Items {
 			this.AddIngredient( ItemID.ActiveStoneBlock, 4 );
 			this.AddIngredient( ItemID.Feather, 1 );
 			this.AddIngredient( ItemID.Lens, 2 );
-			this.AddRecipeGroup( "DowsingMod:EvilBiomeWood", 16 );
+			this.AddRecipeGroup( "Dowsing:EvilBiomeWood", 16 );
 			this.SetResult( mymod.ItemType<DowsingRodItem>() );
 		}
 

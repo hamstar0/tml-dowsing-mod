@@ -1,9 +1,48 @@
-v1
+Future
+-	Set psychokinetic backlash to match projectile hits
+v1.2
+-	Give guide dialog hinting to dowsing rods
 -	Implement Divining Rod
--	Implement Witching Rod
--	Implement backlash fx
--	Release WIP
+	-	...
+	-	Setup item
+-	Implement range indicator
+v1.1
+-	Release
+-	Use alt sound for virt target hits
+-	Set out-of-range to NOT clear debuff
 
+-	@Test mp
+-	Improve rare mob picker
+-	Set npc proximity to degauss
+-	Add sound fx for rod dowse hits and target arrivals
+	-	@Options
+		-	Virtual target touch
+			-	Item_19 (quick whoosh)
+		-	Dowse miss
+			-	Item_32 (flap)
+		-	Dowse hit
+			-	Item_54 (tip)
+		-	Charge degauss
+			-	Drip_1
+		-	Charge hit
+			-	Item_70 (bloom!)
+-	Finish witching rod
+	-	Implement incidental rare mob finding
+	-	Failsafe against virtual targets being too close
+	-	Debug spawn fails
+-	Add an FX for arriving at NPC location
+-	Drop virtual targets to floor
+-	Implement Witching Rod
+	-	Implement psychokinetic charge update
+	-	Set final dowsing target to spawned mob
+	-	Spawn rare mob at zone
+		-	Process return from client
+		-	Transmit request for rare mob to server
+	-	Create imaginary mob zones
+	-	Implement spawn rate detectors
+	-	Setup item
+v1
+-	Release WIP
 -	Implement Vining Rod
 	-	Relegate vining rod to object finding only
 	-	Create detector (tileFlame, tileRope, tileFrameImportant, tileContainer, tileSign, (tileNoFail), Main.tileAlch)

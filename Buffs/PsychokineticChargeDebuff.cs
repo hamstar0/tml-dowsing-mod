@@ -1,8 +1,11 @@
 ﻿using Dowsing.Projectiles;
+using HamstarHelpers.MiscHelpers;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -13,6 +16,7 @@ namespace Dowsing.Buffs {
 		}
 
 
+		////////////////
 
 		private int FxTimer = 0;
 
@@ -21,11 +25,19 @@ namespace Dowsing.Buffs {
 			int buff_type = mymod.BuffType<PsychokineticChargeDebuff>();
 			int buff_idx = player.FindBuffIndex( buff_type );
 			if( buff_idx == -1 ) {
-				player.AddBuff( buff_type, mymod.Config.Data.PsychokineticChargeDuration );
+				player.AddBuff( buff_type, mymod.Config.Data.PsychokineticChargeDurationForTiles );
+			}
+		}
+		public static void ApplyForTargetIfAnew( DowsingMod mymod, Player player ) {
+			int buff_type = mymod.BuffType<PsychokineticChargeDebuff>();
+			int buff_idx = player.FindBuffIndex( buff_type );
+			if( buff_idx == -1 ) {
+				player.AddBuff( buff_type, mymod.Config.Data.PsychokineticChargeDurationForTargets );
 			}
 		}
 
 
+		////////////////
 
 		public override void SetDefaults() {
 			this.DisplayName.SetDefault( "Psychokinetic Charge" );
@@ -35,35 +47,110 @@ namespace Dowsing.Buffs {
 		}
 
 
+		////////////////
+
 		public override void Update( Player player, ref int buff_idx ) {
 			var mymod = (DowsingMod)this.mod;
-			var modworld = mymod.GetModWorld<DowsingWorld>();
-			int count = modworld.CountDowsings();
+			if( !mymod.Config.Data.Enabled ) { return; }
+			if( player.whoAmI != Main.myPlayer ) { return; }
 
-			if( player.whoAmI == Main.myPlayer ) {
-				int range = mymod.Config.Data.PsychokineticDischargeTileRange;
-				var tiles = modworld.DegaussNearbyTiles( range );
-				PsiBoltProjectile.Fire( mymod, player, tiles, false );
-			}
+			bool has_tiles = this.UpdateForTiles( player, buff_idx );
+			bool has_npcs = this.UpdateForTarget( player, buff_idx );
 
-			if( count == 0 ) {
+			if( !has_tiles && !has_npcs ) {
 				player.DelBuff( buff_idx );
-				return;
-			}
+			} else {
+				if( player.buffTime[buff_idx] == 1 ) {
+					var tiles = this.ResetTileSources( player );
+					this.ResetTargetSources( player );
 
-			this.RenderChargeFX( player, count );
-
-			if( player.buffTime[buff_idx] == 1 ) {
-				var tiles = modworld.DegaussNearbyTiles( -1 );
-				PsiBoltProjectile.Fire( mymod, player, tiles, true );
-
-				int damage = mymod.Config.Data.PsychokineticBacklashDamageBase;
-				damage += (count - 1) * mymod.Config.Data.PsychokineticBacklashDamageStack;
-
-				player.Hurt( PsychokineticChargeDebuff.GetDeathMessage(player), damage, 0 );
+					this.HurtForTiles( player, buff_idx, tiles );
+					this.HurtForTarget( player, buff_idx );
+				}
 			}
 		}
 
+
+		private bool UpdateForTiles( Player player, int buff_idx ) {
+			var mymod = (DowsingMod)this.mod;
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+			int count = modplayer.TileData.CountDowsings();
+
+			if( count > 0 ) {
+				if( player.whoAmI == Main.myPlayer ) {
+					int range = mymod.Config.Data.PsychokineticDegaussingTileRange;
+					var tiles = modplayer.TileData.DegaussWithinRange( range );
+					PsiBoltProjectile.Fire( mymod, player, tiles, false );
+				}
+
+				this.RenderPlayerChargeFX( player, count );
+			}
+
+			return count > 0;
+		}
+		
+		private bool UpdateForTarget( Player player, int buff_idx ) {
+			var mymod = (DowsingMod)this.mod;
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+
+			if( modplayer.WitchingData.IsNpcDegaussing( mymod, player ) ) {
+				modplayer.WitchingData.ClearTargetNpc();
+			}
+			if( modplayer.DiviningData.IsNpcDegaussing( mymod, player ) ) {
+				modplayer.DiviningData.ClearTargetNpc();
+			}
+
+			bool has_target = modplayer.WitchingData.HasTarget() || modplayer.DiviningData.HasTarget();
+
+			if( has_target ) {
+				this.RenderPlayerChargeFX( player, 20 );
+			}
+
+			return has_target;
+		}
+
+
+		////////////////
+
+		public void HurtForTiles( Player player, int buff_idx, IDictionary<int, ISet<int>> from_tiles ) {
+			var mymod = (DowsingMod)this.mod;
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+			int count = modplayer.TileData.CountDowsings();
+			
+			PsiBoltProjectile.Fire( mymod, player, from_tiles, true );
+
+			int damage = mymod.Config.Data.PsychokineticBacklashTileDamageBase;
+			damage += (count - 1) * mymod.Config.Data.PsychokineticBacklashDamageStack;
+
+			player.Hurt( PsychokineticChargeDebuff.GetDeathMessage( player ), damage, 0 );
+		}
+
+
+		public void HurtForTarget( Player player, int buff_idx ) {
+			var mymod = (DowsingMod)this.mod;
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+
+			int damage = mymod.Config.Data.PsychokineticBacklashTargetDamageBase;
+
+			Main.PlaySound( SoundID.Item70, player.Center );
+
+			player.Hurt( PsychokineticChargeDebuff.GetDeathMessage( player ), damage, 0 );
+		}
+
+		////////////////
+		
+		public IDictionary<int, ISet<int>> ResetTileSources( Player player ) {
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+			return modplayer.TileData.DegaussWithinRange( -1 );
+		}
+
+		public void ResetTargetSources( Player player ) {
+			var modplayer = player.GetModPlayer<DowsingPlayer>();
+			modplayer.WitchingData.ClearTargetNpc();
+		}
+
+
+		////////////////
 
 		public void PsiBolt( Player player, Vector2 from_pos ) {
 			if( Main.netMode == 1 ) { return; }
@@ -86,14 +173,11 @@ namespace Dowsing.Buffs {
 
 		////////////////
 
-		public void RenderChargeFX( Player player, int intensity ) {
-			if( intensity == 0 ) { return; }
-
+		public void RenderPlayerChargeFX( Player player, int intensity ) {
 			if( this.FxTimer == 0 ) {
 				this.FxTimer = (int)Math.Max( 24d * (1f - (double)intensity/30d), 0 );
 
 				var mymod = (DowsingMod)this.mod;
-				var modworld = mymod.GetModWorld<DowsingWorld>();
 				var pos = new Vector2( player.position.X, player.position.Y - 12 );
 				float scale = 0.7f + (0.01f * intensity);
 				int dust_type = 110;
@@ -102,7 +186,7 @@ namespace Dowsing.Buffs {
 				Main.dust[puff_who].noGravity = true;
 
 				if( (mymod.Config.Data.DEBUGFLAGS & 1) != 0 ) {
-					HamstarHelpers.MiscHelpers.DebugHelpers.Display["charge"] = "FxTimer " + this.FxTimer+ ", scale " + scale+ ", intensity " + intensity;
+					DebugHelpers.Display["player charge"] = "FxTimer " + this.FxTimer+ ", scale " + scale+ ", intensity " + intensity;
 				}
 			} else {
 				this.FxTimer--;

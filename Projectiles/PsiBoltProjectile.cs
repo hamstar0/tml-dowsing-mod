@@ -3,8 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using System.Collections.Generic;
-using Dowsing.Buffs;
-
+using Terraria.ID;
 
 namespace Dowsing.Projectiles {
 	class PsiBoltProjectileInfo : GlobalProjectile {
@@ -38,9 +37,9 @@ namespace Dowsing.Projectiles {
 					var proj_info = Main.projectile[idx].GetGlobalProjectile<PsiBoltProjectileInfo>();
 					proj_info.IsHostile = hostile;
 					
-					if( (mymod.DEBUGFLAGS & 1) != 0 ) {
-						Main.NewText( "fire "+ x + ", " + y );
-					}
+					//if( (mymod.DEBUGFLAGS & 1) != 0 ) {
+					//	Main.NewText( "fire "+ x + ", " + y );
+					//}
 				}
 			}
 		}
@@ -106,11 +105,13 @@ namespace Dowsing.Projectiles {
 			proj.position += proj.velocity;
 
 			if( player.getRect().Intersects( proj.getRect() ) ) {
-				//if( proj_info.IsHostile ) {
-				//	var mymod = (DowsingMod)this.mod;
-				//	int damage = mymod.Config.Data.PsychokineticBacklashDamageStack;
-				//	player.Hurt( PsychokineticChargeDebuff.GetDeathMessage( player ), damage, 0 );
-				//}
+				if( proj_info.IsHostile ) {
+					//var mymod = (DowsingMod)this.mod;
+					//int damage = mymod.Config.Data.PsychokineticBacklashDamageStack;
+					//player.Hurt( PsychokineticChargeDebuff.GetDeathMessage( player ), damage, 0 );
+				} else {
+					Main.PlaySound( SoundID.Drip, (int)player.Center.X, (int)player.Center.Y, 1, 1, 0 );
+				}
 				proj.Kill();
 			}
 		}
