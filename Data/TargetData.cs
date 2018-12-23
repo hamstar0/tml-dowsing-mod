@@ -1,7 +1,7 @@
 ﻿using Dowsing.Buffs;
 using Dowsing.Items;
-using HamstarHelpers.MiscHelpers;
-using HamstarHelpers.TileHelpers;
+using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.TileHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -31,9 +31,9 @@ namespace Dowsing.Data {
 
 			if( (mymod.DEBUGFLAGS & 1) != 0 ) {
 				if( this.TargetNpcWho != -1 ) {
-					DebugHelpers.Display["targetting"] = "fakeouts: " + this.VirtualTargetFakeouts + ", npc: " + Main.npc[this.TargetNpcWho].TypeName + " (who:" + this.TargetNpcWho + ")";
+					DebugHelpers.Print( "targetting", "fakeouts: " + this.VirtualTargetFakeouts + ", npc: " + Main.npc[this.TargetNpcWho].TypeName + " (who:" + this.TargetNpcWho + ")", 20 );
 				} else {
-					DebugHelpers.Display["targetting"] = "fakeouts: " + this.VirtualTargetFakeouts;
+					DebugHelpers.Print( "targetting", "fakeouts: " + this.VirtualTargetFakeouts, 20 );
 				}
 			}
 		}
@@ -96,9 +96,9 @@ namespace Dowsing.Data {
 				pos = player.Center + (rand_heading * rand_range);
 				tile_x = (int)pos.X / 16;
 				tile_y = (int)pos.Y / 16;
-			} while( !TileHelpers.IsWithinMap(tile_x, tile_y) || TileHelpers.IsSolid( Framing.GetTileSafely(tile_x, tile_y) ) );
+			} while( !TileWorldHelpers.IsWithinMap(tile_x, tile_y) || TileHelpers.IsSolid( Framing.GetTileSafely(tile_x, tile_y) ) );
 
-			this.VirtualTargetPosition = TileHelpers.DropToGround( pos );
+			this.VirtualTargetPosition = TileWorldHelpers.DropToGround( pos );
 			this.ReAimVirtualTarget();
 		}
 
@@ -136,7 +136,7 @@ namespace Dowsing.Data {
 			int tile_y = (int)newpos.Y / 16;
 
 			if( (mymod.DEBUGFLAGS & 1) != 0 ) {
-				DebugHelpers.Display["dist"] = min_range + "(" + (dist <= min_range) + ") <= " + dist + " >= " + max_range + "(" + (dist >= max_range) + ")";
+				DebugHelpers.Print( "dist", min_range + "(" + (dist <= min_range) + ") <= " + dist + " >= " + max_range + "(" + (dist >= max_range) + ")", 20 );
 			}
 
 			if( dist >= max_range ) {   // Target out-of-range
@@ -148,10 +148,10 @@ namespace Dowsing.Data {
 			if( TileHelpers.IsSolid( Framing.GetTileSafely(tile_x, tile_y) ) ) {  // Target collides with solid tile?
 				return 2;
 			}
-			if( !TileHelpers.IsWithinMap( tile_x, tile_y ) ) {  // Target outside map?
+			if( !TileWorldHelpers.IsWithinMap( tile_x, tile_y ) ) {  // Target outside map?
 				return 3;
 			}
-			if( !TileHelpers.HasNearbySolid( tile_x, tile_y, 10 ) ) {   // Not near solids?
+			if( !TileFinderHelpers.HasNearbySolid( tile_x, tile_y, 10 ) ) {   // Not near solids?
 				return 4;
 			}
 			return 0;

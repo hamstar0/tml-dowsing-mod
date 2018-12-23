@@ -1,5 +1,5 @@
 ﻿using Dowsing.Buffs;
-using HamstarHelpers.TileHelpers;
+using HamstarHelpers.Helpers.TileHelpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace Dowsing.Items {
 			var item_info = this.item.GetGlobalItem<RodItemInfo>();
 
 			if( item_info.TargetTileType != -1 ) {
-				string tile_name = TileIdentityHelpers.GetTileName( item_info.TargetTileType );
+				string tile_name = TileIdentityHelpers.GetVanillaTileName( item_info.TargetTileType );
 
 				if( tile_name != "" ) {
 					var tip = new TooltipLine( this.mod, "dowse_target", "Attuned to any " + tile_name );
@@ -48,7 +48,7 @@ namespace Dowsing.Items {
 			this.CurrentBeamTravelDistance = 0;
 
 			this.CastDowseBeamWithinCone( player, aiming_at, new Utils.PerLinePoint( delegate ( int tile_x, int tile_y ) {
-				if( !TileHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
+				if( !TileWorldHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
 					return false;
 				}
 

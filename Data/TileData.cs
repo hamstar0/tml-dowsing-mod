@@ -1,6 +1,6 @@
 ﻿using Dowsing.Items;
-using HamstarHelpers.TileHelpers;
-using HamstarHelpers.Utilities.Config;
+using HamstarHelpers.Components.Config;
+using HamstarHelpers.Helpers.TileHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

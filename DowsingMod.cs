@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.MiscHelpers;
-using HamstarHelpers.Utilities.Config;
+﻿using HamstarHelpers.Components.Config;
+using HamstarHelpers.Helpers.DebugHelpers;
 using System;
 using System.IO;
 using Terraria;
@@ -37,7 +37,7 @@ namespace Dowsing {
 					this.Config.SaveFile();
 				}
 			} catch( Exception e ) {
-				DebugHelpers.Log( e.Message );
+				LogHelpers.Log( e.Message );
 				this.Config.SaveFile();
 			}
 

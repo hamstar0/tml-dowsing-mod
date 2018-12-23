@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.TileHelpers;
-using HamstarHelpers.UIHelpers;
+﻿using HamstarHelpers.Helpers.TileHelpers;
+using HamstarHelpers.Helpers.UIHelpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -82,7 +82,7 @@ namespace Dowsing.Items {
 				if( TileIdentityHelpers.IsObject( tile.type ) ) {
 					string text = Lang.GetMapObjectName( Main.Map[tile_x, tile_y].Type );
 
-					text = TileIdentityHelpers.GetTileName( item_info.TargetTileType );
+					text = TileIdentityHelpers.GetVanillaTileName( item_info.TargetTileType );
 
 					if( text == "" ) {
 						Main.NewText( "Vining Rod now attuned to some kind of material...", RodItem.AttunedColor );

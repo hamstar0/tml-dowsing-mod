@@ -1,5 +1,5 @@
 ﻿using Dowsing.Projectiles;
-using HamstarHelpers.MiscHelpers;
+using HamstarHelpers.Helpers.DebugHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -186,7 +186,7 @@ namespace Dowsing.Buffs {
 				Main.dust[puff_who].noGravity = true;
 
 				if( (mymod.Config.Data.DEBUGFLAGS & 1) != 0 ) {
-					DebugHelpers.Display["player charge"] = "FxTimer " + this.FxTimer+ ", scale " + scale+ ", intensity " + intensity;
+					DebugHelpers.Print( "player charge", "FxTimer " + this.FxTimer+ ", scale " + scale+ ", intensity " + intensity, 20 );
 				}
 			} else {
 				this.FxTimer--;

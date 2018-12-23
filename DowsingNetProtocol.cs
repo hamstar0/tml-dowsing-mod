@@ -1,5 +1,4 @@
-﻿using HamstarHelpers.MiscHelpers;
-using HamstarHelpers.NPCHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -104,9 +103,10 @@ namespace Dowsing {
 		////////////////////////////////
 
 		private static void ReceiveSettingsOnClient( DowsingMod mymod, BinaryReader reader ) {
-			if( Main.netMode != 1 ) { return; }	// Clients only
+			if( Main.netMode != 1 ) { return; } // Clients only
 
-			mymod.Config.DeserializeMe( reader.ReadString() );
+			bool _;
+			mymod.Config.DeserializeMe( reader.ReadString(), out _ );
 		}
 
 		private static void ReceiveRequestedDowsingNpcWhoOnClient( DowsingMod mymod, BinaryReader reader ) {
@@ -115,11 +115,11 @@ namespace Dowsing {
 			int npc_who = reader.ReadInt32();
 
 			if( npc_who < 0 || npc_who >= Main.npc.Length ) {
-				DebugHelpers.Log( "ReceiveRequestedDowsingNpcWhoOnClient - Invalid npc_who. " + npc_who );
+				LogHelpers.Log( "ReceiveRequestedDowsingNpcWhoOnClient - Invalid npc_who. " + npc_who );
 				return;
 			}
 			if( Main.npc[npc_who] == null || !Main.npc[npc_who].active ) {
-				DebugHelpers.Log( "ReceiveRequestedDowsingNpcWhoOnClient - Invalid npc (who: " + npc_who + ")" );
+				LogHelpers.Log( "ReceiveRequestedDowsingNpcWhoOnClient - Invalid npc (who: " + npc_who + ")" );
 				return;
 			}
 
@@ -138,7 +138,7 @@ namespace Dowsing {
 			int who = reader.ReadInt32();
 
 			if( who < 0 || who >= Main.player.Length || Main.player[who] == null ) {
-				DebugHelpers.Log( "ReceiveSettingsRequestOnServer - Invalid player whoAmI. " + who );
+				LogHelpers.Log( "ReceiveSettingsRequestOnServer - Invalid player whoAmI. " + who );
 				return;
 			}
 
@@ -154,11 +154,11 @@ namespace Dowsing {
 			float y = reader.ReadSingle();
 
 			if( player_who < 0 || player_who >= Main.player.Length || Main.player[player_who] == null ) {
-				DebugHelpers.Log( "ReceiveRareNpcRequestOnServer - Invalid player whoAmI. " + player_who );
+				LogHelpers.Log( "ReceiveRareNpcRequestOnServer - Invalid player whoAmI. " + player_who );
 				return;
 			}
 			if( npc_type < 0 || npc_type >= Main.npcTexture.Length ) {
-				DebugHelpers.Log( "ReceiveRareNpcRequestOnServer - Invalid npc_type. " + npc_type );
+				LogHelpers.Log( "ReceiveRareNpcRequestOnServer - Invalid npc_type. " + npc_type );
 				return;
 			}
 

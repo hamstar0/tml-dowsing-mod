@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.NPCHelpers;
+﻿using HamstarHelpers.Helpers.NPCHelpers;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Dowsing.Data {
 
 
 		public static void RunSpawnRateGauging( Player player ) {
-			var spawns = NPCSpawnInfoHelpers.GaugeSpawnRatesForPlayer( player, 29, out WitchingTargetData.RandomSpawnPos );
+			var spawns = NPCFinderHelpers.GaugeSpawnRatesForPlayer( player, 29, out WitchingTargetData.RandomSpawnPos );
 
 			foreach( var kv in spawns ) {
 				if( !WitchingTargetData.TotalSpawns.ContainsKey( kv.Key ) ) {

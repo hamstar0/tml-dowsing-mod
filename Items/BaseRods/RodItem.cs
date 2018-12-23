@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.MiscHelpers;
-using HamstarHelpers.PlayerHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -74,14 +74,14 @@ namespace Dowsing.Items {
 
 		protected void CastDowseBeamWithinCone( Player player, Vector2 aim_at, Utils.PerLinePoint plot ) {
 			var mymod = (DowsingMod)this.mod;
-			int max_range = mymod.Config.Data.MaxDowsingRangeInTiles;
+			int max_range_tiles = mymod.Config.Data.MaxDowsingRangeInTiles;
 			double ray_angle = mymod.Config.Data.DowsingRayAngle;
 			Vector2 center = player.MountedCenter;
 
 			double rads = Math.Atan2( aim_at.Y - center.Y, aim_at.X - center.X );
 			double rad_off = ((Main.rand.NextDouble() - 0.5d) * ray_angle) * (Math.PI / 180d);
 			double rad_rand = rads + rad_off;
-			Vector2 end = center + (Vector2.UnitX.RotatedBy(rad_rand) * max_range * 16);
+			Vector2 end = center + (Vector2.UnitX.RotatedBy(rad_rand) * max_range_tiles * 16);
 
 			Utils.PlotTileLine( center, end, 2, plot );
 		}
@@ -103,7 +103,7 @@ namespace Dowsing.Items {
 			}
 
 			if( (mymod.DEBUGFLAGS & 1) != 0 ) {
-				DebugHelpers.Display["cast from"] = "particles: " + particles+", dist: "+ this.CurrentBeamTravelDistance;
+				DebugHelpers.Print( "cast from", "particles: " + particles+", dist: "+ this.CurrentBeamTravelDistance, 20 );
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace Dowsing.Items {
 			}
 
 			if( (mymod.DEBUGFLAGS & 1) != 0 ) {
-				DebugHelpers.Display["cast hit"] = "at: " + tile_x + ", " + tile_y;
+				DebugHelpers.Print( "cast hit", "at: " + tile_x + ", " + tile_y, 20 );
 			}
 		}
 	}

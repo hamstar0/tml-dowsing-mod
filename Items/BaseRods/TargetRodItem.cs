@@ -1,7 +1,7 @@
 ﻿using Dowsing.Buffs;
 using Dowsing.Data;
-using HamstarHelpers.MiscHelpers;
-using HamstarHelpers.TileHelpers;
+using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.TileHelpers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace Dowsing.Items {
 			this.CurrentBeamTravelDistance = 0;
 
 			this.CastDowseBeamWithinCone( player, aiming_at, new Utils.PerLinePoint( delegate ( int tile_x, int tile_y ) {
-				if( !TileHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
+				if( !TileWorldHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
 					return false;
 				}
 				
@@ -67,7 +67,7 @@ namespace Dowsing.Items {
 				this.CurrentBeamTravelDistance = traveled;
 
 				if( (mymod.DEBUGFLAGS & 1) != 0 ) {
-					DebugHelpers.Display["current rare npcs"] = (this.III++)+" "+string.Join(",", rare_npc_type_set.ToArray());
+					DebugHelpers.Print( "current rare npcs", (this.III++)+" "+string.Join(",", rare_npc_type_set.ToArray()), 20 );
 					//var dust = Dust.NewDustPerfect( new Vector2( tile_x * 16, tile_y * 16 ), 259, Vector2.Zero, 0, Color.Red, 0.75f );
 					//dust.noGravity = true;
 				}
@@ -87,7 +87,7 @@ private int III=0;
 			this.CurrentBeamTravelDistance = 0;
 
 			this.CastDowseBeamWithinCone( player, aiming_at, new Utils.PerLinePoint( delegate ( int tile_x, int tile_y ) {
-				if( !TileHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
+				if( !TileWorldHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
 					return false;
 				}
 				
@@ -130,7 +130,7 @@ private int III=0;
 			this.CurrentBeamTravelDistance = 0;
 
 			this.CastDowseBeamWithinCone( player, aiming_at, new Utils.PerLinePoint( delegate ( int tile_x, int tile_y ) {
-				if( !TileHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
+				if( !TileWorldHelpers.IsWithinMap( tile_x, tile_y ) || traveled >= tile_range ) {
 					return false;
 				}
 
