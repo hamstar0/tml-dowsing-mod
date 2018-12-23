@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.ID;
 
+
 namespace Dowsing.Projectiles {
 	class PsiBoltProjectileInfo : GlobalProjectile {
 		public override bool InstancePerEntity { get { return true; } }
